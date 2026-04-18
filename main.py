@@ -1,4 +1,4 @@
-from fantasy_points_new import *
+from functions import *
 
 ########################
 ### MAIN ENTRY POINT ###

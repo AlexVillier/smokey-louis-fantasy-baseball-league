@@ -1,15 +1,14 @@
-import statsapi
 import json
 import csv
-from datetime import date, datetime
+from datetime import datetime
 from time import sleep
 from user_input import *
-
+from api_calls import *
 
 longestPlayerName = 0
 gameDates = []
 boxscoreDatas = {}
-games = statsapi.schedule(start_date=start_date, end_date=end_date)
+games = {}
 startDate = datetime.strptime(start_date, '%m/%d/%Y')
 endDate = datetime.strptime(end_date, '%m/%d/%Y')
 numWeeks = (endDate - startDate).days / 7
@@ -25,7 +24,7 @@ def downloadScores():
     boxscoreDatas = {}
     _boxscoreDatas = {}
     for game in games:
-        _boxscoreDatas[game['game_id']] = statsapi.boxscore_data(game['game_id'])
+        _boxscoreDatas[game['game_id']] = getBoxscoreData(game['game_id'])
         print('.', end="")
     # Saving boxscore data
     with open("boxscores.json", "w") as outfile:
@@ -46,6 +45,8 @@ def loadScores():
     print('Boxscores loaded.')
 
 def findDatesAndBoxscores():
+    global games
+    games = getGames(start_date, end_date)
     if mode == 'weekly':
         for game in games:
             if game['game_date'] not in gameDates:
