@@ -1,0 +1,5 @@
+# Ignore VS Code IDE files
+.vscode/
+
+# Ignore generated boxscores.json files
+boxscores.json
