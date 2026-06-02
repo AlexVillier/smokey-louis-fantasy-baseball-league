@@ -2,8 +2,8 @@ import json
 import csv
 from datetime import datetime
 from time import sleep
-from user_input import *
-from api_calls import *
+from slfbl_app.user_input import *
+from slfbl_app.api_calls import *
 
 longestPlayerName = 0
 gameDates = []
@@ -145,8 +145,11 @@ def determinePlayerTeams():
     rosterFile.close()
 
 def calculateReliefPitcherPoints(playerStats):
-    points = (2 if float(playerStats['inningsPitched']) >= 0.1 else 0) + int(float(playerStats['inningsPitched'])) + 2 * playerStats['wins'] + (3 if 'note' in playerStats and playerStats['note'][1] == 'S' else 0) + playerStats['holds'] - playerStats['earnedRuns'] - playerStats['losses'] - playerStats['blownSaves']
-    return points
+    # Explanation: 1 point per appearance                              + 1 point for pitching at least 1 inning                       + 2 points per win        + 3 points for a save (note field contains 'S')                         + 1 point per hold     - 1 point per earned run    - 1 point per loss      - 1 point per blown save
+    points = (1 if float(playerStats['inningsPitched']) >= 0.1 else 0) + (1 if int(float(playerStats['inningsPitched'])) >= 1 else 0) + 2 * playerStats['wins'] + (3 if 'note' in playerStats and playerStats['note'][1] == 'S' else 0) + playerStats['holds'] - playerStats['earnedRuns'] - playerStats['losses'] - playerStats['blownSaves']
+    # Explanation: 1 bonus point if no earned runs allowed     + 1 bonus point if no earned runs allowed and at least 1.1 innings pitched
+    bonusPoints = (1 if playerStats['earnedRuns'] == 0 else 0) + (1 if playerStats['earnedRuns'] == 0 and float(playerStats['inningsPitched']) >= 1.1 else 0)
+    return points + bonusPoints
 
 def calculateAllReliefPitcherPoints(reliefPitcherPoints, boxscoreData, team):
     for pitcherId in boxscoreData[team]['pitchers']:
@@ -164,7 +167,7 @@ def calculateAllReliefPitcherPoints(reliefPitcherPoints, boxscoreData, team):
 def calculateStartingPitcherPoints(playerStats):
     points = int(float(playerStats['inningsPitched'])) + (int(float(playerStats['inningsPitched'])) - 5 if(int(float(playerStats['inningsPitched'])) > 5) else 0) + (4 if playerStats['wins'] == 1 else 0) - playerStats['earnedRuns']
     bonusPoints = (2 if (playerStats['runs'] == 0 and float(playerStats['inningsPitched']) >= float(9)) else 0) + (10 if (playerStats['hits'] == 0 and float(playerStats['inningsPitched']) >= float(9)) else 0)
-    return points, bonusPoints
+    return points + bonusPoints
 
 def calculateAllStartingPitcherPoints(startingPitcherPoints, boxscoreData, team):
     startingPitcherId = boxscoreData[team]['pitchers'][0]    # Only the starting pitcher of the team

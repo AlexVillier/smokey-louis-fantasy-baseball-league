@@ -2,6 +2,11 @@
 
 ## Version History
 
+### v0.3.0
+* Added Django database/backend
+* Created the Points, Player, and Matchup pages
+* Created scripts for maintaining database objects
+
 ### v0.2.0
 * Created React (Vite) front-end app
 

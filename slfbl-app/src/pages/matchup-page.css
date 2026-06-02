@@ -1,0 +1,49 @@
+.team-layout {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.team-2-div {
+    margin: 1rem 1rem 3rem;
+}
+
+.team-select {
+    margin-bottom: 1rem;
+}
+
+.points-table {
+    margin: auto;
+    background-color: #9ca3af;
+    tr td,th {
+        padding: 0.25rem 1rem;
+    }
+}
+
+.row-light {
+    background-color: #2e303a;
+}
+
+.row-dark {
+    background-color: #16171d;
+}
+
+.bottom-spacing {
+    margin-bottom: 3rem;
+}
+
+.light-text {
+    color: #b6becc;
+}
+
+.results-table {
+    border-collapse: collapse;
+    td, th {
+        border: 3px solid #9ca3af;
+    }
+    thead {
+        border-bottom: 6px solid #9ca3af;
+    }
+    tfoot {
+        border-top: 6px solid #9ca3af;
+    }
+}

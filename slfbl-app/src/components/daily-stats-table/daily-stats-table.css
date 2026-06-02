@@ -1,0 +1,11 @@
+.points-table {
+    margin: auto;
+    background-color: #9ca3af;
+    tr td,th {
+        padding: 0.25rem 1rem;
+    }
+}
+
+.row-light {
+    background-color: #2e303a;
+}
