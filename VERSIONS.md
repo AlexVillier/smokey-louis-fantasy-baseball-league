@@ -2,6 +2,9 @@
 
 ## Version History
 
+### v0.3.1
+* Added Dockerfile and requirements.txt for production container environment
+
 ### v0.3.0
 * Added Django database/backend
 * Created the Points, Player, and Matchup pages
