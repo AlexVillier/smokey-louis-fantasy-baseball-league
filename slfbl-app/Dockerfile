@@ -5,6 +5,7 @@ WORKDIR /app
 COPY package.json package-lock.json* ./
 COPY vite.config.js .
 COPY tsconfig.json* .
+COPY index.html .
 COPY public ./public
 COPY src ./src
 
