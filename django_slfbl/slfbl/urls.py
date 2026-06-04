@@ -18,9 +18,12 @@ from django.conf import settings
 from django.contrib import admin
 from django.urls import include, path
 
-try:
-    from debug_toolbar.toolbar import debug_toolbar_urls
-except ImportError:
+if settings.DEBUG:
+    try:
+        from debug_toolbar.toolbar import debug_toolbar_urls
+    except ImportError:
+        debug_toolbar_urls = lambda: []
+else:
     debug_toolbar_urls = lambda: []
 
 from rest_framework import routers
