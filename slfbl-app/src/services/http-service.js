@@ -2,7 +2,7 @@ import axios from "axios";
 
 export class HttpService {
 
-    static API_URL = "http://localhost:8000";
+    static API_URL = import.meta.env.VITE_API_URL || "/api";
 
     static async getPlayer(playerId) {
         try {

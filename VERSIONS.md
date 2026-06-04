@@ -2,6 +2,9 @@
 
 ## Version History
 
+### v0.3.4
+* Created docker-compose to run backend and frontend in separate containers
+
 ### v0.3.3
 * Made debug_toolbar import conditional to dev mode and not in production mode
 
