@@ -2,6 +2,9 @@
 
 ## Version History
 
+### v0.3.2
+* Added production settings files for production environment
+
 ### v0.3.1
 * Added Dockerfile and requirements.txt for production container environment
 

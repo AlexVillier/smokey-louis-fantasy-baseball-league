@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-#d4)88))ql!y3wdcwb2(8c59lvtk(c39y_7x!#wd1u@1(5o-vo
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["villier.org,www.villier.org"]
 
 
 # Application definition
@@ -138,8 +138,14 @@ REST_FRAMEWORK = {
 
 # Or, for security, specify exact origins:
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",  # Your Vite dev server
-    "http://127.0.0.1:5173",  # Alternative localhost
+    "https://localhost:5173",  # Your Vite dev server
+    "https://127.0.0.1:5173",  # Alternative localhost
+    "https://villier.org",  # Your production frontend domain
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://localhost:5173",
+    "https://villier.org",
 ]
 
 # If your requests include credentials (e.g., authentication), also add:
