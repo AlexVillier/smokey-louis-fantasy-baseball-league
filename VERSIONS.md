@@ -2,6 +2,9 @@
 
 ## Version History
 
+### v0.3.3
+* Made debug_toolbar import conditional to dev mode and not in production mode
+
 ### v0.3.2
 * Added production settings files for production environment
 
