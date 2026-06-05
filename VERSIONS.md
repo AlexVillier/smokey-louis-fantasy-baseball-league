@@ -2,6 +2,10 @@
 
 ## Version History
 
+### v0.3.8
+* Updated `update_daily_stats` to only run for the previous day's games
+* Added `refresh_daily_stats` command, which purges all daily stats and then recalculates all stats until the previous day
+
 ### v0.3.7
 * Added scheduler to run `update_daily_stats` once a day at 5am
 * Added scheduler to run `update_weekly_stats` once a week on Mondays at 5am
