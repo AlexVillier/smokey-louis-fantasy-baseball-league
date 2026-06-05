@@ -19,8 +19,13 @@ class Command(BaseCommand):
         start_date = "03/25/2026"       # MLB season started March 25th, 2026
         end_date = (date.today() - timedelta(days=1)).strftime("%m/%d/%Y")  # Exclude today's games since they may not be finished yet
         games = getGames(start_date, end_date)
-        self.stdout.write(f"Calculating daily player stats for {len(games)} games from {start_date} to {end_date}...")
+        num_games = len(games)
+        self.stdout.write(f"Calculating daily player stats for {num_games} games from {start_date} to {end_date}...")
+        game_count = 0
         for game in games:
+            game_count += 1
+            self.stdout.write(f"\r\tProcessing game {game_count}/{num_games} ({(game_count/num_games) * 100:.2%}%)")
+            self.stdout.flush()
             boxscoreData = getBoxscoreData(game['game_id'])
             calculateAllBatterPoints(boxscoreData, True)
             calculateAllReliefPitcherPoints(boxscoreData)
