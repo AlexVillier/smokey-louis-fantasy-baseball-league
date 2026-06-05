@@ -14,3 +14,7 @@ from django.core.wsgi import get_wsgi_application
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'slfbl.settings')
 
 application = get_wsgi_application()
+
+# Start scheduler
+from slfbl_app.scheduler import start_scheduler
+start_scheduler()

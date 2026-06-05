@@ -1,6 +1,10 @@
 version: "3.9"
 
 services:
+  django:
+    build: .
+    command: gunicorn slfbl.wsgi:application --bind 0.0.0.0:8000
+
   backend:
     build:
       context: .

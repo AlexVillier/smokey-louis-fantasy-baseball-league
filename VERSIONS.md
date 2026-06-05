@@ -2,6 +2,10 @@
 
 ## Version History
 
+### v0.3.7
+* Added scheduler to run `update_daily_stats` once a day at 5am
+* Added scheduler to run `update_weekly_stats` once a week on Mondays at 5am
+
 ### v0.3.6
 * Added Start Date and End Date fields to the Matchup page
 

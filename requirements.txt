@@ -1,6 +1,8 @@
+apscheduler
 Django
 djangorestframework
 django-cors-headers
 django-debug-toolbar
 gunicorn
+statsapi
 unidecode
