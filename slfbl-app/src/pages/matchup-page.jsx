@@ -19,13 +19,6 @@ const MatchupPage = () => {
     [null, null],
     [null, null]
   ]);
-  const [spsCountAllStarts, setSpsCountAllStarts] = useState([
-    [true, true],
-    [true, true],
-    [true, true],
-    [true, true],
-    [true, true]
-  ]);
 
   const startDate = "2026-05-04"; // month is 0-based
   const endDate = "2026-05-10"; // month is 0-based
@@ -52,10 +45,8 @@ const MatchupPage = () => {
 
   const handleTeamChange = (event, teamIndex) => {
     const selectedTeam = event.target.value;
-    console.log(`Selected team ${teamIndex + 1}:`, selectedTeam);
     HttpService.getTeamDailyStats(startDate, endDate, selectedTeam)
       .then((response) => {
-        console.log(`Daily stats for team ${teamIndex + 1}:`, response);
         if (teamIndex === 0) {
           setPlayersTeam1(response);
         } else {
@@ -84,6 +75,17 @@ const MatchupPage = () => {
         // Add the starting pitcher to the list
         const spIndex = Number.parseInt(selected) - 1;
         startingPitchers[spIndex][teamIndex] = { playerId, playerName, playerPoints, pointsByDay, countAllStarts: true };
+
+        // Re-evaluate all previously selected SPs for this team to see if we need to update their countAllStarts value based on the total number of starts for this team
+        let cumulativeStarts = 0;
+        for (let i = 0; i < startingPitchers.length; i++) {
+          if (startingPitchers[i][teamIndex]) {
+            const spPointsByDay = startingPitchers[i][teamIndex].pointsByDay;
+            const spNumStarts = spPointsByDay.filter(day => day && day !== "X").length;
+            cumulativeStarts += spNumStarts;
+            startingPitchers[i][teamIndex].countAllStarts = cumulativeStarts <= 6;
+          }
+        }
       }
       setSelectedStartingPitchers(startingPitchers);
     } else if (selected) {
@@ -147,26 +149,19 @@ const MatchupPage = () => {
 
   const calculateStartingPitcherPoints = (teamIndex) => {
     let numStarts = 0;
-    const countAllStartsFlags = [...spsCountAllStarts];
-    console.log("Selected Starting Pitchers for team " + (teamIndex + 1) + ": ", selectedStartingPitchers);
     const totalPoints = selectedStartingPitchers.reduce((acc, row, rowIndex) => {
-      console.log("Calculating points for row: ", row);
       return acc + (row[teamIndex]?.pointsByDay.reduce((dayAcc, day) => {
-        console.log("Calculating points for day: ", day);
         if (!day || day === "X") {
           return dayAcc;  // If the pitcher didn't start that day, don't add any points and don't count it as a start
         }
         numStarts++;
         if (numStarts > 6) {
-          console.log("Already counted 6 starts, skipping remaining points for this pitcher");
-          countAllStartsFlags[rowIndex][teamIndex].countAllStarts = false; // Set flag to indicate that not all starts are being counted for this pitcher
           return dayAcc; // Only count points for the first 6 starts by the 5 starting pitchers
         }
         return dayAcc + (Number(day) || 0);
       }, 0) || 0)
     }, 0);
 
-    setSpsCountAllStarts(countAllStartsFlags);
     return totalPoints;
   };
 
@@ -178,7 +173,7 @@ const MatchupPage = () => {
         <div>
           <p>Team 1:</p>
           <select className="team-select" onChange={(e) => handleTeamChange(e, 0)}>
-            {slfblTeams.map((team, index) => (
+            {slfblTeams?.map((team, index) => (
               <option key={index} value={team.id}>
                 {team.name}
               </option>
@@ -189,7 +184,7 @@ const MatchupPage = () => {
         <div className="team-2-div">
           <p>Team 2:</p>
           <select className="team-select" onChange={(e) => handleTeamChange(e, 1)}>
-            {slfblTeams.map((team, index) => (
+            {slfblTeams?.map((team, index) => (
               <option key={index} value={team.id}>
                 {team.name}
               </option>
@@ -229,9 +224,9 @@ const MatchupPage = () => {
               {selectedStartingPitchers.map((row, index) => (
                 <tr key={"sp" + index} className={(selectedPlayers.length + index + 1) % 2 === 0 ? "row-dark" : "row-light"}>
                   <td><p>{row[0]?.playerName}</p></td>
-                  <td><p>{(spsCountAllStarts[index][0] ? "" : "(") + (row[0]?.playerPoints ? row[0]?.playerPoints : "") + (spsCountAllStarts[index][0] ? "" : ")")}</p></td>
+                  <td><p>{(row[0]?.countAllStarts === false ? "(" : "") + (row[0]?.playerPoints ? row[0]?.playerPoints : "") + (row[0]?.countAllStarts === false ? ")" : "")}</p></td>
                   <td><p>{row[1]?.playerName}</p></td>
-                  <td><p>{(spsCountAllStarts[index][1] ? "" : "(") + (row[1]?.playerPoints ? row[1]?.playerPoints : "") + (spsCountAllStarts[index][1] ? "" : ")")}</p></td>
+                  <td><p>{(row[1]?.countAllStarts === false ? "(" : "") + (row[1]?.playerPoints ? row[1]?.playerPoints : "") + (row[1]?.countAllStarts === false ? ")" : "")}</p></td>
                 </tr>
               ))}
             </tbody>

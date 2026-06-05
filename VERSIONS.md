@@ -2,6 +2,10 @@
 
 ## Version History
 
+### v0.3.5
+* Updated to still support development mode
+* Fixes too many re-renders error on Matchup page
+
 ### v0.3.4
 * Created docker-compose to run backend and frontend in separate containers
 
