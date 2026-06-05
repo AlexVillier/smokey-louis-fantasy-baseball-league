@@ -4,5 +4,5 @@ djangorestframework
 django-cors-headers
 django-debug-toolbar
 gunicorn
-statsapi
+MLB-StatsAPI
 unidecode
