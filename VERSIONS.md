@@ -2,6 +2,9 @@
 
 ## Version History
 
+### v0.3.6
+* Added Start Date and End Date fields to the Matchup page
+
 ### v0.3.5
 * Updated to still support development mode
 * Fixes too many re-renders error on Matchup page

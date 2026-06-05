@@ -47,3 +47,12 @@
         border-top: 6px solid #9ca3af;
     }
 }
+
+.date-picker {
+    margin: 1rem;
+}
+
+.dates-container {
+    display: flex;
+    justify-content: center;
+}

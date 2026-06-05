@@ -19,13 +19,33 @@ const MatchupPage = () => {
     [null, null],
     [null, null]
   ]);
+  const [startDate, setStartDate] = useState("2026-05-04");
+  const [endDate, setEndDate] = useState("2026-05-10");
+  const [dates, setDates] = useState([]);
+  const [teamId1, setTeamId1] = useState(null);
+  const [teamId2, setTeamId2] = useState(null);
 
-  const startDate = "2026-05-04"; // month is 0-based
-  const endDate = "2026-05-10"; // month is 0-based
-  const dates = [];
-  for (let d = new Date(startDate + "T00:00:00"); d <= new Date(endDate + "T23:59:59"); d.setDate(d.getDate() + 1)) {
-      dates.push(new Date(d));
-  }
+  const generateDatesArray = () => {
+    const datesForTable = [];
+    for (let d = new Date(startDate + "T00:00:00"); d <= new Date(endDate + "T23:59:59"); d.setDate(d.getDate() + 1)) {
+        datesForTable.push(new Date(d));
+    }
+    setDates(datesForTable);
+  };
+
+  useEffect(() => {
+    generateDatesArray();
+
+    if (!startDate || !endDate) return;  // Don't fetch data until both dates have been selected
+
+    console.log("Fetching team daily stats for teams", teamId1, teamId2, "with dates", startDate, endDate);
+    if (teamId1) {
+      updateTeamDailyStats(0, teamId1);
+    }
+    if (teamId2) {
+      updateTeamDailyStats(1, teamId2);
+    }
+  }, [startDate, endDate]);
 
   useEffect(() => {
     const fetchSlfblTeams = async () => {
@@ -43,8 +63,7 @@ const MatchupPage = () => {
 
   if (loading) return <p>Loading...</p>;
 
-  const handleTeamChange = (event, teamIndex) => {
-    const selectedTeam = event.target.value;
+  const updateTeamDailyStats = (teamIndex, selectedTeam) => {
     HttpService.getTeamDailyStats(startDate, endDate, selectedTeam)
       .then((response) => {
         if (teamIndex === 0) {
@@ -54,6 +73,13 @@ const MatchupPage = () => {
         }
       })
       .catch((error) => console.error('Error fetching team daily stats:', error));
+  };
+
+  const handleTeamChange = (event, teamIndex) => {
+    const selectedTeam = event.target.value;
+    teamIndex === 0 ? setTeamId1(selectedTeam) : setTeamId2(selectedTeam);
+    console.log("Selected team for team index", teamIndex, ":", selectedTeam);
+    updateTeamDailyStats(teamIndex, selectedTeam);
   };
 
   const removeStartingPitcher = (startingPitchers, teamIndex, playerId) => {
@@ -165,10 +191,28 @@ const MatchupPage = () => {
     return totalPoints;
   };
 
+  const startDateChange = (e) => {
+    setStartDate(e.target.value);
+  };
+
+  const endDateChange = (e) => {
+    setEndDate(e.target.value);
+  };
+
   return (
     <div>
       <NavHeader />
       <h1>Matchup</h1>
+      <div className="dates-container">
+        <div>
+          <label>Start Date:</label>
+          <input type="date" value={startDate} onChange={(e) => startDateChange(e)} className="date-picker" />
+        </div>
+        <div>
+          <label>End Date:</label>
+          <input type="date" value={endDate} onChange={(e) => endDateChange(e)} className="date-picker" />
+        </div>
+      </div>
       <div>
         <div>
           <p>Team 1:</p>
